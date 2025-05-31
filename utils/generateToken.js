@@ -7,6 +7,6 @@ export const generateTokenAndSetCookie = (userId, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "none",  // allow cross-origin cookie
-    secure: process.env.NODE_ENV !== "development",  // must be true for SameSite=None in production
+    // secure: process.env.NODE_ENV !== "development",  // must be true for SameSite=None in production
   });
 }
