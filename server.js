@@ -16,7 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigins = [
   'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004',               // local dev frontend
-  'https://blogapplokesh.netlify.app/' // replace with your actual Netlify URL
+  'https://blogapplokesh.netlify.app/',
+  'https://omnifyfrontend.onrender.com/'
 ];
 
 app.use(cors({
