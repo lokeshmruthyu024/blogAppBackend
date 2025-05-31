@@ -23,7 +23,7 @@ export const signupUser = async (req, res) => {
       userName,
       email,
       password: hashedPassword
-    });
+    })
     if (newUser) {
       generateTokenAndSetCookie(newUser._id, res);
       await newUser.save();
@@ -32,7 +32,7 @@ export const signupUser = async (req, res) => {
         fullName: newUser.fullName,
         email: newUser.email,
         message: "Signup successful"
-      });
+      })
     } else {
       res.status(400).json({ error: "Invalid user Data" });
     }
@@ -40,49 +40,38 @@ export const signupUser = async (req, res) => {
     console.log(error);
     res.status(500).json({ error: "Internal server Error" });
   }
-};
-
+}
 export const loginUser = async (req, res) => {
   try {
     const { userName, password } = req.body;
     const user = await User.findOne({ userName });
-    if (!user) {
-      return res.status(400).json({ error: "Invalid Credentials" });
-    }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
-    if (!isPasswordCorrect) {
+    if (!user || !isPasswordCorrect) {
       return res.status(400).json({ error: "Invalid Credentials" });
     }
-    // Generate token and set cookie (secure, httpOnly, sameSite)
     generateTokenAndSetCookie(user._id, res);
-
     res.status(201).json({
       _id: user._id,
       fullName: user.fullName,
       email: user.email,
       userName: user.userName,
       message: "Login successful"
-    });
+    })
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Internal sever error" })
   }
-};
+}
 
 export const logoutUser = async (req, res) => {
   try {
-    // Clear JWT cookie securely
-    res.clearCookie("jwt", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-    });
-    res.status(200).json({ message: "Logged out successfully" });
+    res.cookie("jwt", "", { maxAge: 0 })
+    res.status(200).json({ message: "logged out successfully" })
   } catch (error) {
     console.log("Error in logout controller", error.message);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" })
   }
-};
+}
 
 export const getUser = async (req, res) => {
   try {
@@ -103,4 +92,4 @@ export const getUser = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
-};
+}
